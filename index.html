@@ -1,7 +1,9 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>kjhkj</title>
+    <title>星空导航页面</title>
     <style>
         * {
             margin: 0;
@@ -298,45 +300,45 @@
     <div class="auto-run-container" id="auto-run-container"></div>
     
     <div class="container">
-        <h1 class="title">网址8ACC.CC</h1>
-        <p class="subtitle">🍆🍆午夜激情电影🍆🍆</p>
+        <h1 class="title">🌶🌶8ACC.CC🌶🌶</h1>
+        <p class="subtitle"></p>
         
         <div class="links-container">
             <div class="link-row">
                 <div class="link-item">
                     <a href="http://genfcvci.u.czxbw.com/s/15G6DS" class="link-button" id="link1">
-                        <div class="link-text">🍊午夜电影</div>
+                        <div class="link-text">🍎两性知识</div>
                     </a>
-                    <div class="link-label">探索两性奥秘</div>
+                    <div class="link-label"></div>
                 </div>
                 
                 <div class="link-item">
                     <a href="https://cdn.auoktalk.com/1765305207_9a98847a3077bb8d026152b20018639f?code=aubr96" class="link-button" id="link2">
-                        <div class="link-text">🍋午夜电影</div>
+                        <div class="link-text">🥭两性知识</div>
                     </a>
-                    <div class="link-label">体验激情电影</div>
+                    <div class="link-label"></div>
                 </div>
             </div>
             
             <div class="link-row">
                 <div class="link-item">
                     <a href="http://1206.pgzz.wse1l.com/a/626269?7pff" class="link-button" id="link3">
-                        <div class="link-text">🍓午夜电影</div>
+                        <div class="link-text">🍆两性知识</div>
                     </a>
-                    <div class="link-label">开启体验之旅</div>
+                    <div class="link-label"></div>
                 </div>
                 
                 <div class="link-item">
-                    <a href="http://rk1.4u8.cn/rk1.html?u=bucket_6963c3bfb0d48" class="link-button" class="link-button" id="link4">
-                        <div class="link-text">🍅午夜电影</div>
+                    <a href="http://dsjhfgsdfdgs.cn/syb/" class="link-button" id="link4">
+                        <div class="link-text">🍓两性知识</div>
                     </a>
-                    <div class="link-label">实时收看更新</div>
+                    <div class="link-label"></div>
                 </div>
             </div>
         </div>
         
         <div class="info-footer">
-            <p></p>
+            <p>©</p>
         </div>
     </div>
 
@@ -530,7 +532,8 @@
         function setupButtonEffects() {
             document.querySelectorAll('.link-button').forEach(button => {
                 button.addEventListener('click', function(e) {
-                    e.preventDefault();
+                    // 在实际使用中，移除下面的 preventDefault() 以启用真实跳转
+                    // e.preventDefault();
                     
                     this.style.transform = 'scale(0.95)';
                     
@@ -559,15 +562,22 @@
                     
                     setTimeout(() => {
                         const buttonText = this.querySelector('.link-text').textContent;
-                        alert(`即将跳转到 "${buttonText}" 页面\n(此为演示，实际将跳转至相应页面)`);
-                        this.style.transform = '';
+                        console.log(`跳转到 "${buttonText}" 页面`);
                         
-                        if (ripple.parentNode) {
-                            ripple.parentNode.removeChild(ripple);
-                        }
-                        if (style.parentNode) {
-                            style.parentNode.removeChild(style);
-                        }
+                        // 恢复按钮状态
+                        setTimeout(() => {
+                            this.style.transform = '';
+                        }, 100);
+                        
+                        // 清理波纹效果
+                        setTimeout(() => {
+                            if (ripple.parentNode) {
+                                ripple.parentNode.removeChild(ripple);
+                            }
+                            if (style.parentNode) {
+                                style.parentNode.removeChild(style);
+                            }
+                        }, 600);
                     }, 300);
                 });
             });
