@@ -1,762 +1,410 @@
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>cfhcfc</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>frgtjjyjyuju</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
         }
-        
+
         body {
             min-height: 100vh;
+            font-family: system-ui, -apple-system, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
             display: flex;
-            justify-content: center;
             align-items: center;
-            background: #0a0a2a;
-            overflow: auto;
+            justify-content: center;
+            padding: clamp(1rem, 4vw, 2.5rem);
             position: relative;
-            transition: background-color 3s ease;
+            /* 星空山水树高清背景（免费图库）*/
+            background: url('https://images.pexels.com/photos/1252869/pexels-photo-1252869.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&fit=crop') no-repeat center center fixed;
+            background-size: cover;
         }
-        
-        .stars {
+
+        /* 柔和遮罩，增强卡片可读性但保持背景通透 */
+        body::before {
+            content: '';
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
+            background: rgba(0, 0, 0, 0.28);
+            backdrop-filter: blur(1px);
+            z-index: 0;
+            pointer-events: none;
         }
-        
-        .star {
-            position: absolute;
-            background-color: white;
-            border-radius: 50%;
-            transition: background-color 2s ease;
-        }
-        
-        .moon {
-            position: fixed;
-            width: 120px;
-            height: 120px;
-            background: radial-gradient(circle at 30px 30px, #f5f3ce, #e8e6b5);
-            border-radius: 50%;
-            top: 15%;
-            right: 10%;
-            box-shadow: 0 0 60px rgba(245, 243, 206, 0.7);
-            z-index: -1;
-            animation: moon-glow 4s infinite alternate;
-        }
-        
-        .moon::before, .moon::after {
-            content: '';
-            position: absolute;
-            background-color: #d8d6b0;
-            border-radius: 50%;
-        }
-        
-        .moon::before {
-            width: 25px;
-            height: 25px;
-            top: 30px;
-            left: 50px;
-        }
-        
-        .moon::after {
-            width: 15px;
-            height: 15px;
-            top: 60px;
-            left: 70px;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            text-align: center;
-            padding: 20px;
-            background-color: transparent;
+
+        /* 主卡片 - 高透明度毛玻璃，适配不同屏幕 */
+        .card {
             position: relative;
-            z-index: 10;
+            z-index: 2;
+            width: 100%;
+            max-width: 580px;
+            background: rgba(18, 22, 40, 0.28);
+            backdrop-filter: blur(12px);
+            border-radius: clamp(24px, 6vw, 48px);
+            padding: clamp(1.5rem, 5vw, 2.5rem) clamp(1.2rem, 4vw, 2rem);
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            transition: all 0.2s ease;
         }
-        
+
+        /* 标题 - 基础白色，JS动态改变颜色 */
         .title {
-            color: #fff;
-            font-size: 5rem;
-            margin-bottom: 20px;
-            text-shadow: 0 0 30px rgba(255, 255, 255, 0.9);
-            font-weight: 800;
-            letter-spacing: 4px;
-            opacity: 0.95;
-            animation: title-glow 3s infinite alternate;
+            font-size: clamp(1.6rem, 6vw, 2.2rem);
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            letter-spacing: -0.3px;
+            transition: color 0.6s ease;
         }
-        
-        .subtitle {
-            color: rgba(255, 255, 255, 0.75);
-            font-size: 1.5rem;
-            margin-bottom: 30px;
-            max-width: 800px;
+
+        .desc {
+            font-size: clamp(0.85rem, 3vw, 1rem);
+            color: #ffffff;
+            margin-bottom: clamp(1.5rem, 5vw, 2.2rem);
+            line-height: 1.5;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            font-weight: 500;
+            max-width: 90%;
             margin-left: auto;
             margin-right: auto;
-            line-height: 1.6;
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
         }
-        
-        .links-container {
+
+        /* 链接容器：垂直排列，居中对齐 */
+        .links-grid {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 30px;
-            margin-top: 10px;
+            gap: clamp(0.8rem, 2.5vw, 1.2rem);
+            margin-bottom: 1rem;
         }
-        
-        .link-row {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            width: 100%;
-            margin-bottom: 10px;
-        }
-        
+
+        /* 按钮样式 - 统一宽度，视觉整齐 */
         .link-item {
-            display: flex;
-            flex-direction: column;
+            display: inline-flex;
             align-items: center;
-            width: 300px;
-        }
-        
-        .link-button {
-            width: 280px;
-            height: 120px;
-            border-radius: 18px;
-            background: linear-gradient(145deg, rgba(20, 40, 120, 0.7), rgba(40, 80, 180, 0.9));
-            backdrop-filter: blur(10px);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: #fff;
+            justify-content: space-between;
+            gap: clamp(0.7rem, 2vw, 1.2rem);
+            background: rgba(10, 15, 30, 0.78);
+            backdrop-filter: blur(4px);
+            border-radius: 60px;
+            padding: clamp(0.6rem, 2vh, 0.85rem) 1.8rem;
             text-decoration: none;
-            font-weight: 700;
-            border: 2px solid rgba(100, 150, 255, 0.3);
-            box-shadow: 0 10px 30px rgba(0, 20, 80, 0.5),
-                        inset 0 0 20px rgba(100, 150, 255, 0.1);
-            transition: all 0.5s ease;
+            transition: background 0.6s ease, transform 0.25s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            width: 260px;            /* 统一固定宽度，桌面端整齐 */
+            max-width: 80vw;          /* 小屏幕下不超过视口宽度 */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            cursor: pointer;
             position: relative;
             overflow: hidden;
-            z-index: 1;
-            text-align: center;
-            padding: 18px;
-            cursor: pointer;
+            /* 添加微弱的脉冲动画 */
+            animation: subtlePulse 2s infinite ease-in-out;
         }
-        
-        .link-button:hover {
-            transform: translateY(-8px) scale(1.04);
-            border-color: rgba(150, 200, 255, 0.6);
+
+        /* 脉冲动画 - 让按钮有轻微呼吸感 */
+        @keyframes subtlePulse {
+            0% {
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), 0 0 0 0 rgba(255, 255, 255, 0);
+            }
+            50% {
+                box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35), 0 0 0 4px rgba(255, 255, 255, 0.1);
+            }
+            100% {
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), 0 0 0 0 rgba(255, 255, 255, 0);
+            }
         }
-        
-        .link-button:before {
+
+        /* 悬浮动画 - 上浮 + 光晕加强 */
+        @media (hover: hover) {
+            .link-item:hover {
+                transform: translateY(-4px) translateX(3px);
+                background: rgba(70, 120, 200, 0.92) !important;
+                border-color: rgba(255, 255, 255, 0.7);
+                box-shadow: 0 12px 28px rgba(0, 80, 200, 0.5), 0 0 0 2px rgba(255, 255, 255, 0.2);
+                animation: none; /* 悬浮时暂停脉冲，避免冲突 */
+            }
+            .link-item:hover .link-arrow {
+                transform: translateX(6px);
+                color: white;
+            }
+        }
+
+        /* 为按钮添加光泽扫过效果 (伪元素动画) */
+        .link-item::before {
             content: '';
             position: absolute;
-            top: -8px;
-            left: -8px;
-            right: -8px;
-            bottom: -8px;
-            background: radial-gradient(circle, rgba(100, 150, 255, 0.2) 0%, transparent 70%);
-            z-index: -1;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            border-radius: 26px;
-        }
-        
-        .link-button:hover:before {
-            opacity: 1;
-        }
-        
-        .link-text {
-            font-size: 1.9rem;
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
-            transition: all 0.5s ease;
-            line-height: 1.1;
-            margin-bottom: 2px;
-        }
-        
-        .link-button:hover .link-text {
-            transform: scale(1.04);
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.9);
-        }
-        
-        .link-label {
-            margin-top: 10px;
-            color: rgba(180, 200, 255, 0.95);
-            font-size: 1.3rem;
-            font-weight: 600;
-            text-shadow: 0 0 10px rgba(150, 180, 255, 0.6);
-            letter-spacing: 0.5px;
-            transition: all 0.3s ease;
-        }
-        
-        .link-item:hover .link-label {
-            color: #fff;
-            transform: scale(1.03);
-        }
-        
-        .star-trail {
-            position: fixed;
-            width: 4px;
-            height: 4px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            z-index: 1;
-            box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.7);
-        }
-        
-        .auto-run-container {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: 2;
+            top: -50%;
+            left: -60%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                115deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.25) 50%,
+                transparent 70%
+            );
+            transform: rotate(25deg);
+            transition: left 0.5s ease;
             pointer-events: none;
-            opacity: 0;
         }
-        
-        .auto-run-element {
-            position: absolute;
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
+
+        .link-item:hover::before {
+            left: 100%;
+            transition: left 0.6s ease;
         }
-        
-        .shooting-star {
-            position: fixed;
-            width: 100px;
-            height: 2px;
-            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%);
+
+        /* 点击效果 */
+        .link-item:active {
+            transform: scale(0.96);
+            transition: transform 0.08s;
+        }
+
+        .link-info {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            position: relative;
             z-index: 1;
-            transform: rotate(-45deg);
         }
-        
-        .info-footer {
-            margin-top: 40px;
-            color: rgba(180, 200, 255, 0.5);
-            font-size: 0.95rem;
-            text-align: center;
+
+        .link-icon {
+            font-size: clamp(1rem, 4vw, 1.3rem);
+            opacity: 0.95;
         }
-        
-        /* 动画定义 */
-        @keyframes title-glow {
-            0% { text-shadow: 0 0 30px rgba(255, 255, 255, 0.9); }
-            100% { text-shadow: 0 0 50px rgba(255, 255, 255, 1), 0 0 60px rgba(150, 180, 255, 0.7); }
+
+        .link-name {
+            font-weight: 600;
+            color: #ffffff;
+            font-size: clamp(0.85rem, 3.5vw, 1rem);
+            white-space: nowrap;
+            letter-spacing: 0.3px;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.2);
         }
-        
-        @keyframes moon-glow {
-            0% { box-shadow: 0 0 60px rgba(245, 243, 206, 0.7); }
-            100% { box-shadow: 0 0 80px rgba(245, 243, 206, 0.9); }
+
+        .link-arrow {
+            color: #e0f0ff;
+            font-size: clamp(0.85rem, 3vw, 1rem);
+            transition: transform 0.25s ease;
+            position: relative;
+            z-index: 1;
         }
-        
-        @keyframes ripple {
-            0% { transform: scale(0.8); opacity: 1; }
-            100% { transform: scale(1.5); opacity: 0; }
+
+        .footer-note {
+            margin-top: clamp(1.5rem, 5vw, 2.2rem);
+            font-size: clamp(0.65rem, 2.5vw, 0.75rem);
+            color: #f0f5ff;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            padding-top: clamp(1rem, 3vw, 1.4rem);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            font-weight: 500;
+            letter-spacing: 0.5px;
         }
-        
-        /* 按键颜色自动转换动画 */
-        @keyframes button-color-cycle {
-            0% { 
-                background: linear-gradient(145deg, rgba(120, 40, 140, 0.7), rgba(160, 60, 180, 0.9));
-                box-shadow: 0 10px 30px rgba(120, 40, 140, 0.5), inset 0 0 20px rgba(160, 60, 180, 0.1);
-            }
-            25% { 
-                background: linear-gradient(145deg, rgba(40, 100, 140, 0.7), rgba(60, 140, 180, 0.9));
-                box-shadow: 0 10px 30px rgba(40, 100, 140, 0.5), inset 0 0 20px rgba(60, 140, 180, 0.1);
-            }
-            50% { 
-                background: linear-gradient(145deg, rgba(140, 80, 40, 0.7), rgba(180, 120, 60, 0.9));
-                box-shadow: 0 10px 30px rgba(140, 80, 40, 0.5), inset 0 0 20px rgba(180, 120, 60, 0.1);
-            }
-            75% { 
-                background: linear-gradient(145deg, rgba(40, 140, 100, 0.7), rgba(60, 180, 140, 0.9));
-                box-shadow: 0 10px 30px rgba(40, 140, 100, 0.5), inset 0 0 20px rgba(60, 180, 140, 0.1);
-            }
-            100% { 
-                background: linear-gradient(145deg, rgba(120, 40, 140, 0.7), rgba(160, 60, 180, 0.9));
-                box-shadow: 0 10px 30px rgba(120, 40, 140, 0.5), inset 0 0 20px rgba(160, 60, 180, 0.1);
-            }
-        }
-        
-        /* 按键悬停时覆盖动画 */
-        .link-button:hover {
-            animation-play-state: paused;
-        }
-        
-        /* 应用颜色自动转换动画到所有按钮 */
-        .link-button {
-            animation: button-color-cycle 40s infinite linear;
-        }
-        
-        /* 为每个按钮设置不同的动画延迟，创造错落效果 */
-        #link1 { animation-delay: 0s; }
-        #link2 { animation-delay: 10s; }
-        #link3 { animation-delay: 20s; }
-        #link4 { animation-delay: 30s; }
-        
-        /* 响应式设计 */
-        @media (max-width: 1100px) {
-            .link-row { gap: 30px; }
-            .link-item { width: 280px; }
-            .link-button { width: 260px; height: 115px; }
-            .title { font-size: 4.5rem; }
-        }
-        
-        @media (max-width: 900px) {
-            .link-row { gap: 25px; }
-            .link-item { width: 250px; }
-            .link-button { width: 240px; height: 110px; }
-            .link-text { font-size: 1.7rem; }
-            .title { font-size: 4rem; }
-        }
-        
-        @media (max-width: 768px) {
-            .links-container { gap: 25px; }
-            .link-row { 
-                flex-direction: column; 
-                gap: 25px;
-                margin-bottom: 5px;
-            }
-            .link-item { width: 100%; max-width: 300px; }
-            .link-button { 
-                width: 300px; 
-                height: 105px;
-                padding: 15px;
-            }
-            .title { 
-                font-size: 3.5rem; 
-                margin-bottom: 15px;
-            }
-            .subtitle { 
-                font-size: 1.3rem; 
-                margin-bottom: 25px;
-                line-height: 1.5;
-            }
-            .moon { width: 90px; height: 90px; top: 10%; right: 5%; }
-            .link-label { margin-top: 8px; }
-        }
-        
+
+        /* ========= 响应式适配 - 确保按钮整齐 ========= */
         @media (max-width: 480px) {
-            .container { padding: 15px; }
-            .links-container { gap: 20px; }
-            .link-row { gap: 20px; }
-            .link-item { max-width: 280px; }
-            .link-button { 
-                width: 280px; 
-                height: 95px; 
-                border-radius: 15px; 
-                padding: 12px;
+            .link-item {
+                width: 220px;          /* 小屏幕稍微缩窄，但仍统一 */
+                padding: 0.6rem 1rem;
             }
-            .title { 
-                font-size: 2.8rem; 
-                margin-bottom: 10px;
-                letter-spacing: 2px;
+            .link-name {
+                white-space: nowrap;   /* 保持不换行，确保整齐 */
+                font-size: 0.9rem;
             }
-            .subtitle { 
-                font-size: 1.2rem; 
-                padding: 0 15px; 
-                margin-bottom: 20px; 
-                line-height: 1.4;
+            .link-info {
+                gap: 0.6rem;
             }
-            .moon { width: 70px; height: 70px; top: 5%; right: 5%; }
-            .link-text { font-size: 1.6rem; }
-            .link-label { 
-                margin-top: 6px; 
-                font-size: 1.1rem;
+            .desc {
+                max-width: 100%;
             }
-            .info-footer {
-                margin-top: 30px;
-                font-size: 0.85rem;
+            /* 移动端减弱动画效果以节省性能，但保留脉冲 */
+            .link-item::before {
+                display: none;
             }
+        }
+
+        @media (min-width: 481px) and (max-width: 768px) {
+            .card {
+                max-width: 550px;
+            }
+            .link-item {
+                width: 240px;
+                padding: 0.75rem 1.2rem;
+            }
+            .link-name {
+                font-size: 1rem;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .card {
+                max-width: 600px;
+            }
+            .link-item {
+                width: 260px;
+                padding: 0.85rem 1.5rem;
+            }
+            .link-name {
+                font-size: 1rem;
+            }
+        }
+
+        @media (min-width: 1025px) {
+            .card {
+                max-width: 650px;
+            }
+            .link-item {
+                width: 280px;
+                padding: 0.9rem 1.8rem;
+            }
+            .link-name {
+                font-size: 1.05rem;
+            }
+            .title {
+                font-size: 2.4rem;
+            }
+            .desc {
+                font-size: 1.05rem;
+            }
+        }
+
+        @media (min-width: 1600px) {
+            .card {
+                max-width: 700px;
+            }
+            .link-item {
+                width: 300px;
+            }
+        }
+
+        @media (orientation: landscape) and (max-height: 500px) {
+            body {
+                padding: 0.8rem;
+            }
+            .card {
+                padding: 1.2rem 1.5rem;
+            }
+            .links-grid {
+                gap: 0.6rem;
+            }
+            .footer-note {
+                margin-top: 1rem;
+                padding-top: 0.8rem;
+            }
+            .link-item {
+                width: 240px;
+                padding: 0.5rem 1rem;
+            }
+        }
+
+        body, body::before {
+            background-attachment: fixed;
         }
     </style>
 </head>
 <body>
-    <div class="stars" id="stars-container"></div>
-    <div class="moon"></div>
-    <div class="auto-run-container" id="auto-run-container"></div>
-    
-    <div class="container">
+
+    <div class="card">
         <h1 class="title">8Acc.cc</h1>
-        <p class="subtitle">4K画面</p>
-        
-        <div class="links-container">
-            <div class="link-row">
-                <div class="link-item">
-                    <a href="http://cdn.rabtv.cn/2b3309a96bbf44f087cb58b497d8f85c.html?atecode=MTAxLEdGa2tWLDY" class="link-button" id="link1" target="_blank">
-                        <div class="link-text">🥝午夜激情剧场</div>
-                    </a>
-                    <div class="link-label">①</div>
+        <p class="desc">浏览器看不了更换其他浏览器</p>
+
+        <div class="links-grid">
+            <a href="http://cdn.rabtv.cn/2b3309a96bbf44f087cb58b497d8f85c.html?atecode=MTAxLEdGa2tWLDY" class="link-item" target="_blank" rel="noopener noreferrer">
+                <div class="link-info">
+                    <span class="link-icon">🌹</span>
+                    <span class="link-name">少妇寂寞</span>
                 </div>
-                
-                <div class="link-item">
-                    <a href="http://f40V7.0102.jkqzfdd.com/dBFwxdme/328?t=pages/wapredirect" class="link-button" id="link2" target="_blank">
-                        <div class="link-text">🍑午夜激情剧场</div>
-                    </a>
-                    <div class="link-label">②</div>
+                <span class="link-arrow">🤟</span>
+            </a>
+
+            <a href="http://f40V7.0102.jkqzfdd.com/dBFwxdme/328?t=pages/wapredirect" class="link-item" target="_blank" rel="noopener noreferrer">
+                <div class="link-info">
+                    <span class="link-icon">🌻</span>
+                    <span class="link-name">激烈战场</span>
                 </div>
-            </div>
-            
-            <div class="link-row">
-                <div class="link-item">
-                    <a href="http://dsjhfgsdfdgs.cn/syb/tY6sP0" class="link-button" id="link3" target="_blank">
-                        <div class="link-text">🫛午夜激情剧场</div>
-                    </a>
-                    <div class="link-label">③</div>
+                <span class="link-arrow">🤟</span>
+            </a>
+
+            <a href="http://dsjhfgsdfdgs.cn/syb/tY6sP0" class="link-item" target="_blank" rel="noopener noreferrer">
+                <div class="link-info">
+                    <span class="link-icon">🍁</span>
+                    <span class="link-name">人妖殊途</span>
                 </div>
-                
-                <div class="link-item">
-                    <a href="https://ajsyscdn.bookln.cn/brty0uc4.kc?atecode=MjAxLEhEb0pHaywx" id="link4" target="_blank">
-                        <div class="link-text">🍆午夜激情剧场</div>
-                    </a>
-                    <div class="link-label">④</div>
+                <span class="link-arrow">🤟</span>
+            </a>
+
+            <a href="https://ajsyscdn.bookln.cn/brty0uc4.kc?atecode=MjAxLEhEb0pHaywx" class="link-item" target="_blank" rel="noopener noreferrer">
+                <div class="link-info">
+                    <span class="link-icon">🍁</span>
+                    <span class="link-name">人妻激情</span>
                 </div>
-            </div>
+                <span class="link-arrow">🤟</span>
+            </a>
         </div>
-        
-        <div class="info-footer">
-            <p></p>
+
+        <div class="footer-note">
+            点击链接即刻加入 · 推广数据实时同步
         </div>
     </div>
 
     <script>
-        // 创建星空背景
-        function createStars() {
-            const starsContainer = document.getElementById('stars-container');
-            const starCount = 250;
+        (function() {
+            // 按钮背景色方案 (深色半透明，与毛玻璃协调)
+            const buttonColors = [
+                'rgba(45, 55, 85, 0.78)',   // 深空蓝灰
+                'rgba(65, 45, 95, 0.78)',   // 暗紫罗兰
+                'rgba(35, 70, 80, 0.78)',   // 墨绿湖蓝
+                'rgba(85, 45, 65, 0.78)',   // 酒红星空
+                'rgba(40, 60, 105, 0.78)',  // 午夜蓝
+                'rgba(70, 50, 75, 0.78)',   // 薰衣草暗调
+                'rgba(30, 80, 70, 0.78)'    // 极光深绿
+            ];
+
+            // 主标题颜色方案 (明亮色系，与深色背景对比)
+            const titleColors = [
+                '#FFE6B3',  // 暖金色
+                '#C5C6FF',  // 淡紫罗兰
+                '#A0E7E5',  // 浅海蓝
+                '#FFB7B2',  // 珊瑚粉
+                '#B5F0D1',  // 薄荷绿
+                '#FADADD',  // 淡樱花
+                '#FFD966'   // 琥珀黄
+            ];
+
+            const buttons = document.querySelectorAll('.link-item');
+            const titleElement = document.querySelector('.title');
             
-            for (let i = 0; i < starCount; i++) {
-                const star = document.createElement('div');
-                star.classList.add('star');
+            if (buttons.length === 0 || !titleElement) return;
+            
+            let colorIndex = 0;
+            
+            // 同步更新按钮背景色和标题颜色
+            function updateColors() {
+                // 更新按钮背景色
+                const newButtonColor = buttonColors[colorIndex % buttonColors.length];
+                buttons.forEach(btn => {
+                    btn.style.backgroundColor = newButtonColor;
+                });
                 
-                const size = Math.random() * 3 + 1;
-                const x = Math.random() * 100;
-                const y = Math.random() * 100;
-                const brightness = Math.random() * 0.8 + 0.2;
+                // 更新主标题颜色
+                const newTitleColor = titleColors[colorIndex % titleColors.length];
+                titleElement.style.color = newTitleColor;
                 
-                star.style.width = `${size}px`;
-                star.style.height = `${size}px`;
-                star.style.left = `${x}%`;
-                star.style.top = `${y}%`;
-                star.style.opacity = brightness;
-                
-                // 添加闪烁动画
-                const twinkleDuration = Math.random() * 5 + 3;
-                const style = document.createElement('style');
-                const animationName = `star-twinkle-${i}`;
-                style.textContent = `
-                    @keyframes ${animationName} {
-                        0% { opacity: ${brightness}; }
-                        50% { opacity: ${brightness * 0.3}; }
-                        100% { opacity: ${brightness}; }
-                    }
-                `;
-                document.head.appendChild(style);
-                star.style.animation = `${animationName} ${twinkleDuration}s infinite`;
-                
-                starsContainer.appendChild(star);
+                colorIndex = (colorIndex + 1) % Math.max(buttonColors.length, titleColors.length);
             }
-        }
-        
-        // 创建星星轨迹效果
-        function createStarTrails() {
-            setInterval(() => {
-                const trail = document.createElement('div');
-                trail.classList.add('star-trail');
-                
-                const x = Math.random() * 100;
-                trail.style.left = `${x}%`;
-                trail.style.top = `-10px`;
-                
-                const duration = Math.random() * 10 + 5;
-                const trailId = `trail-${Date.now()}`;
-                const style = document.createElement('style');
-                style.textContent = `
-                    @keyframes ${trailId} {
-                        0% {
-                            transform: translateY(0) translateX(0);
-                            opacity: 0;
-                        }
-                        10% {
-                            opacity: 1;
-                        }
-                        90% {
-                            opacity: 1;
-                        }
-                        100% {
-                            transform: translateY(100vh) translateX(100px);
-                            opacity: 0;
-                        }
-                    }
-                `;
-                document.head.appendChild(style);
-                trail.style.animation = `${trailId} ${duration}s linear`;
-                
-                document.body.appendChild(trail);
-                
-                setTimeout(() => {
-                    if (trail.parentNode) trail.parentNode.removeChild(trail);
-                    if (style.parentNode) style.parentNode.removeChild(style);
-                }, duration * 1000);
-            }, 800);
-        }
-        
-        // 创建流星效果
-        function createShootingStars() {
-            setInterval(() => {
-                const star = document.createElement('div');
-                star.classList.add('shooting-star');
-                
-                const startX = Math.random() * 100;
-                const startY = Math.random() * 100;
-                star.style.left = `${startX}%`;
-                star.style.top = `${startY}%`;
-                
-                const duration = Math.random() * 2 + 1;
-                const starId = `shooting-${Date.now()}`;
-                const style = document.createElement('style');
-                style.textContent = `
-                    @keyframes ${starId} {
-                        0% {
-                            transform: translateX(-100px) translateY(-100px) rotate(-45deg);
-                            opacity: 0;
-                        }
-                        10% {
-                            opacity: 1;
-                        }
-                        100% {
-                            transform: translateX(calc(100vw + 100px)) translateY(calc(100vh + 100px)) rotate(-45deg);
-                            opacity: 0;
-                        }
-                    }
-                `;
-                document.head.appendChild(style);
-                star.style.animation = `${starId} ${duration}s linear`;
-                
-                document.body.appendChild(star);
-                
-                setTimeout(() => {
-                    if (star.parentNode) star.parentNode.removeChild(star);
-                    if (style.parentNode) style.parentNode.removeChild(style);
-                }, duration * 1000);
-            }, 3000);
-        }
-        
-        // 创建自动运行效果
-        function createAutoRunEffects() {
-            const container = document.getElementById('auto-run-container');
             
-            for (let i = 0; i < 5; i++) {
-                const element = document.createElement('div');
-                element.classList.add('auto-run-element');
-                
-                const size = Math.random() * 200 + 50;
-                const startX = Math.random() * 100;
-                const startY = Math.random() * 100;
-                
-                element.style.width = `${size}px`;
-                element.style.height = `${size}px`;
-                element.style.left = `${startX}%`;
-                element.style.top = `${startY}%`;
-                
-                const duration = Math.random() * 60 + 30;
-                const delay = Math.random() * 10;
-                const elementId = `auto-run-${i}`;
-                const style = document.createElement('style');
-                style.textContent = `
-                    @keyframes ${elementId} {
-                        0% {
-                            transform: translate(0, 0) rotate(0deg);
-                        }
-                        100% {
-                            transform: translate(100vw, 100vh) rotate(360deg);
-                        }
-                    }
-                `;
-                document.head.appendChild(style);
-                element.style.animation = `${elementId} ${duration}s linear ${delay}s infinite`;
-                
-                container.appendChild(element);
-            }
-        }
-        
-        // 每2分钟自动变换背景色调
-        let currentColorIndex = 0;
-        const colors = [
-            { bg: '#0a0a2a', star: '#ffffff' },
-            { bg: '#0c0c1a', star: '#e6e6ff' },
-            { bg: '#1a0a2a', star: '#ffebf5' },
-            { bg: '#0a2a1a', star: '#ebfff5' },
-            { bg: '#2a1a0a', star: '#fff5eb' },
-            { bg: '#1a0a1a', star: '#f5ebff' },
-        ];
-        
-        function changeBackgroundColor() {
-            currentColorIndex = (currentColorIndex + 1) % colors.length;
-            const color = colors[currentColorIndex];
+            // 立即设置初始颜色
+            updateColors();
             
-            document.body.style.backgroundColor = color.bg;
-            
-            setTimeout(() => {
-                const stars = document.querySelectorAll('.star');
-                stars.forEach(star => {
-                    star.style.backgroundColor = color.star;
-                });
-            }, 1500);
-        }
-        
-        // 为按钮添加点击特效和跳转功能
-        function setupButtonEffects() {
-            document.querySelectorAll('.link-button').forEach(button => {
-                button.addEventListener('click', function(e) {
-                    // 防止默认行为，我们将手动处理跳转
-                    e.preventDefault();
-                    
-                    // 获取按钮的href属性
-                    const href = this.getAttribute('href');
-                    
-                    // 如果href为空或为#，则不跳转
-                    if (!href || href === '#') {
-                        console.log('未设置跳转链接');
-                        return;
-                    }
-                    
-                    // 添加点击动画效果
-                    this.style.transform = 'scale(0.95)';
-                    
-                    // 创建涟漪效果
-                    const ripple = document.createElement('div');
-                    ripple.style.position = 'absolute';
-                    ripple.style.width = '100%';
-                    ripple.style.height = '100%';
-                    ripple.style.borderRadius = '18px';
-                    ripple.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
-                    ripple.style.top = '0';
-                    ripple.style.left = '0';
-                    ripple.style.zIndex = '-1';
-                    
-                    const rippleId = `ripple-${Date.now()}`;
-                    const style = document.createElement('style');
-                    style.textContent = `
-                        @keyframes ${rippleId} {
-                            0% { transform: scale(0.8); opacity: 1; }
-                            100% { transform: scale(1.5); opacity: 0; }
-                        }
-                    `;
-                    document.head.appendChild(style);
-                    ripple.style.animation = `${rippleId} 0.6s ease-out`;
-                    
-                    this.appendChild(ripple);
-                    
-                    // 获取按钮文本
-                    const buttonText = this.querySelector('.link-text').textContent;
-                    
-                    // 显示跳转提示
-                    const notification = document.createElement('div');
-                    notification.style.position = 'fixed';
-                    notification.style.top = '20px';
-                    notification.style.left = '50%';
-                    notification.style.transform = 'translateX(-50%)';
-                    notification.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-                    notification.style.color = 'white';
-                    notification.style.padding = '15px 30px';
-                    notification.style.borderRadius = '10px';
-                    notification.style.zIndex = '1000';
-                    notification.style.boxShadow = '0 0 20px rgba(255, 255, 255, 0.3)';
-                    notification.style.fontSize = '1.2rem';
-                    notification.textContent = `正在跳转到 ${buttonText}...`;
-                    
-                    document.body.appendChild(notification);
-                    
-                    // 延迟跳转，让用户看到动画效果
-                    setTimeout(() => {
-                        // 移除通知
-                        if (notification.parentNode) {
-                            notification.parentNode.removeChild(notification);
-                        }
-                        
-                        // 恢复按钮状态
-                        this.style.transform = '';
-                        
-                        // 移除涟漪效果
-                        if (ripple.parentNode) {
-                            ripple.parentNode.removeChild(ripple);
-                        }
-                        if (style.parentNode) {
-                            style.parentNode.removeChild(style);
-                        }
-                        
-                        // 执行跳转（在新标签页打开）
-                        window.open(href, '_blank');
-                        
-                    }, 600);
-                });
-            });
-        }
-        
-        // 添加按钮文字特效
-        function addButtonTextEffects() {
-            const buttons = document.querySelectorAll('.link-button');
-            
-            buttons.forEach(button => {
-                button.addEventListener('mouseenter', function() {
-                    const text = this.querySelector('.link-text');
-                    const glowId = `glow-${Date.now()}`;
-                    const style = document.createElement('style');
-                    style.textContent = `
-                        @keyframes ${glowId} {
-                            0% { text-shadow: 0 0 15px rgba(255, 255, 255, 0.7); }
-                            100% { text-shadow: 0 0 25px rgba(255, 255, 255, 1), 0 0 35px rgba(255, 255, 255, 0.6); }
-                        }
-                    `;
-                    style.id = glowId;
-                    document.head.appendChild(style);
-                    text.style.animation = `${glowId} 1s infinite alternate`;
-                });
-                
-                button.addEventListener('mouseleave', function() {
-                    const text = this.querySelector('.link-text');
-                    text.style.animation = '';
-                });
-            });
-        }
-        
-        // 页面加载完成后初始化所有效果
-        document.addEventListener('DOMContentLoaded', function() {
-            createStars();
-            createStarTrails();
-            createShootingStars();
-            createAutoRunEffects();
-            setupButtonEffects();
-            addButtonTextEffects();
-            
-            // 立即执行一次背景变换
-            changeBackgroundColor();
-            // 每2分钟变换一次背景
-            setInterval(changeBackgroundColor, 120000);
-            
-            // 键盘快捷键支持
-            document.addEventListener('keydown', function(e) {
-                if (e.key >= '1' && e.key <= '4') {
-                    const index = parseInt(e.key) - 1;
-                    const button = document.querySelectorAll('.link-button')[index];
-                    if (button) {
-                        button.click();
-                    }
-                }
-            });
-        });
+            // 每隔 3 秒自动切换色彩
+            setInterval(updateColors, 3000);
+        })();
     </script>
+    <!--  -->
 </body>
 </html>
-
-
